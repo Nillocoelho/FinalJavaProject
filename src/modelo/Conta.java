@@ -9,15 +9,17 @@ public class Conta {
 	private ArrayList<Correntista> correntista = new ArrayList<Correntista>();
 	
 	public Conta(int id, String data, double saldo){
+		super();
 		this.id = id;
 		this.data = data;
 		this.saldo = saldo;
 	}
 	public void creditar(double valor) {
+		this.saldo = saldo + valor;
 		
 	}
 	public void debitar(double valor) {
-		
+		this.saldo = saldo - valor;
 	}
 	public void transferir(double valor, destino Conta) {
 		

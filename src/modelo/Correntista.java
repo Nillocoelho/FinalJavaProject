@@ -9,6 +9,7 @@ public class Correntista {
 	private ArrayList<Conta> contas = new ArrayList<Conta>();
 	
 	public Correntista(String cpf, String nome, String senha) {
+		super();
 		this.cpf = cpf;
 		this.nome = nome;
 		this.senha = senha;
@@ -16,4 +17,14 @@ public class Correntista {
 	public double getSaldoTotal() {
 		return 
 	}
+	public void criarCorrentista(String cpf, String nome, String senha) {
+		
+	}
+	public void inserirCorrentistaConta(Conta c) {
+		contas.add(c);
+	}
+	public void removerCorrentista(Conta c) {
+		contas.remove(c);
+	}
+	
 }
