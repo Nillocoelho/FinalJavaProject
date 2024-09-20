@@ -24,5 +24,9 @@ public class Conta {
 	public void transferir(double valor, destino Conta) {
 		
 	}
+	public int getid(int id) {
+		return id;
+	}
+	
 	
 }

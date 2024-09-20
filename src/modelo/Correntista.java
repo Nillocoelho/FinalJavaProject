@@ -14,8 +14,8 @@ public class Correntista {
 		this.nome = nome;
 		this.senha = senha;
 	}
-	public double getSaldoTotal() {
-		return 
+	public double getSaldoTotal(double saldo) {
+		return saldo;
 	}
 	public void criarCorrentista(String cpf, String nome, String senha) {
 		
@@ -26,5 +26,7 @@ public class Correntista {
 	public void removerCorrentista(Conta c) {
 		contas.remove(c);
 	}
-	
+	public String getcpf(String cpf) {
+		return this.cpf;
+	}
 }

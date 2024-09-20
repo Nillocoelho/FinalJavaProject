@@ -1,8 +1,3 @@
-/**********************************
- * IFPB - Curso Superior de Tec. em Sist. para Internet
- * POO
- * Prof. Fausto Maranh�o Ayres
- **********************************/
 package repositorio;
 
 import java.io.File;
@@ -29,17 +24,17 @@ public class Repositorio {
 		conta.remove(c);
 	}
 
-	public Conta localizarParticipante(String nome)	{
+	public Conta localizarContas(int id){
 		for(Conta c : conta)
-			if(c.getNome().equals(nome))
+			if(c.getid(id) == id)
 				return c;
 		return null;
 	}
 
-	public void adicionar(Evento e)	{
+	public void adicionar(Correntista e)	{
 		correntista.add(e);
 	}
-	public void remover(Evento e)	{
+	public void remover(Correntista e)	{
 		correntista.remove(e);
 	}
 
@@ -56,11 +51,11 @@ public class Repositorio {
 		return null;
 	}
 
-	public ArrayList<Conta> getParticipantes() 	{
+	public ArrayList<Conta> getConta() 	{
 		return conta;
 	}
 	
-	public ArrayList<Correntista> getEventos() 	{
+	public ArrayList<Correntista> getCorrentista() 	{
 		return correntista;
 	}
 
@@ -189,7 +184,7 @@ public class Repositorio {
 			for(Participante p : conta) {
 				//montar uma lista com os id dos eventos do participante
 				lista = new ArrayList<>();
-				for(Evento e : p.getEventos()) {
+				for(Evento e : p.getCorrentista()) {
 					lista.add(e.getId()+"");
 				}
 				listaId = String.join(",", lista);
