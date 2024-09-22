@@ -1,7 +1,5 @@
 package modelo;
-
 import java.util.ArrayList;
-import 
 
 public class Conta {
 	private int id;
@@ -17,52 +15,32 @@ public class Conta {
 	}
 	public void creditar(double valor) {
 		this.saldo += valor;
-		
 	}
 	public void debitar(double valor) {
-		if (saldo >= valor) { // Verifica se há saldo suficiente
-			this.saldo -= valor;
-	    } else {
-	    	throw new IllegalArgumentException("Saldo insuficiente.");
-	    }
+		this.saldo -= valor;
 	}
-	public void transferir(double valor, destino Conta) {
-		 if (saldo >= valor) {
-			 this.debitar(valor); 
-			 destino.creditar(valor); 
-	     } else {
-	    	 throw new IllegalArgumentException("Saldo insuficiente para transferir.");
-	     }
-	}
-<<<<<<< HEAD
-	public ArrayList<Correntista> getCorrentistas() {
-		return correntistas;
+	public void transferir(double valor, Conta destino) {
+		debitar(valor);
+		destino.creditar(valor);
 	}
 	public int getId() {
-        return id;
-    }
-    public String getData() {
-        return data;
-    }
-
-    public double getSaldo() {
-        return saldo;
-    }
-    public void adicionar(Correntista c){
-    	correntistas.add(c);
-	}
-	public void remover(Correntista c){
-		correntistas.remove(c);
-	}
-	public void setSaldo(double novosaldo) {
-		this.saldo = novosaldo;
-	}
-
-=======
-	public int getid(int id) {
 		return id;
 	}
-	
->>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
+	public String getData() {
+		return data;
+	}
+	public double getSaldo() {
+		return saldo;
+	}
+	public ArrayList<Correntista> getCorrentista() {
+		return correntistas;
+	}
+	public void adicionarCorrentista(Correntista co) {
+		correntistas.add(co);
+	}
+	@Override
+	public String toString() {
+		return "Conta [id=" + id + ", data=" + data + ", saldo=" + saldo + ", correntista=" + correntistas + "]";
+	}	
 	
 }
