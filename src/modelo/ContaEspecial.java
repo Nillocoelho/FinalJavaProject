@@ -2,13 +2,19 @@ package modelo;
 
 public class ContaEspecial extends Conta{
 	private double limite;
+<<<<<<< HEAD
 	
 	public ContaEspecial(int id, String data, double saldo, double limite) {
 		super(id, data, saldo);
+=======
+	public ContaEspecial(int id, String data, double saldo, double limite){
+		super(id,data,saldo);
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 		this.limite = limite;
 	}
 
 	public void debitar(double valor) {
+<<<<<<< HEAD
         if (getSaldo() + limite < valor) {
             throw new IllegalArgumentException("Saldo insuficiente, incluindo o limite.");
         }
@@ -31,6 +37,9 @@ public class ContaEspecial extends Conta{
 	            ", Saldo: " + getSaldo() +
 	            ", Limite: " + limite +
 	            '}';
+=======
+		this.limite = limite - valor;
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 	}
 		
 	

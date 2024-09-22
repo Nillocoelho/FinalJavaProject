@@ -30,13 +30,24 @@ public class Repositorio {
 		correntistas.remove(corren);
 	}
 
+<<<<<<< HEAD
 	public Correntista localizarCorrentista(String cpf)	{
 		for(Correntista c : correntistas)
 			if(c.getCPF().equals(cpf))
+=======
+	public void remover(Conta c)	{
+		conta.remove(c);
+	}
+
+	public Conta localizarContas(int id){
+		for(Conta c : conta)
+			if(c.getid(id) == id)
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 				return c;
 		return null;
 	}
 
+<<<<<<< HEAD
 	public Conta localizarConta(int id)	{
 		for(Conta con : contas)
 			if(con.getId() == id)
@@ -49,6 +60,34 @@ public class Repositorio {
 	
 	public ArrayList<Correntista> getCorrentistas() 	{
 		return correntistas;
+=======
+	public void adicionar(Correntista e)	{
+		correntista.add(e);
+	}
+	public void remover(Correntista e)	{
+		correntista.remove(e);
+	}
+
+	public Correntista localizarEvento(int id)	{
+		for(Correntista e : correntista)
+			if(e.getId() == id)
+				return e;
+		return null;
+	}
+	public Correntista localizarEvento(String data)	{
+		for(Correntista c : correntista)
+			if(c.getData().equals(data))
+				return c;
+		return null;
+	}
+
+	public ArrayList<Conta> getConta() 	{
+		return conta;
+	}
+	
+	public ArrayList<Correntista> getCorrentista() 	{
+		return correntista;
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 	}
 
 	public int getTotalConta()	{
@@ -180,8 +219,13 @@ public class Repositorio {
 			for(Conta c : contas) {
 				//montar uma lista com os id das contas do correntista
 				lista = new ArrayList<>();
+<<<<<<< HEAD
 				for(Correntista con : c.getCorrentistas()) {
 					lista.add(con.getCPF()+"");
+=======
+				for(Evento e : p.getCorrentista()) {
+					lista.add(e.getId()+"");
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 				}
 				listacpf = String.join(",", lista);
 

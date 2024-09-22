@@ -34,6 +34,7 @@ public class Conta {
 	    	 throw new IllegalArgumentException("Saldo insuficiente para transferir.");
 	     }
 	}
+<<<<<<< HEAD
 	public ArrayList<Correntista> getCorrentistas() {
 		return correntistas;
 	}
@@ -57,5 +58,11 @@ public class Conta {
 		this.saldo = novosaldo;
 	}
 
+=======
+	public int getid(int id) {
+		return id;
+	}
+	
+>>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 	
 }
