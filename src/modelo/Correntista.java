@@ -17,9 +17,6 @@ public class Correntista {
 	public double getSaldoTotal(double saldo) {
 		return saldo;
 	}
-	public void criarCorrentista(String cpf, String nome, String senha) {
-		
-	}
 	public void adicionarConta(Conta c) {
 		contas.add(c);
 	}
