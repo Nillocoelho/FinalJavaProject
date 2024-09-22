@@ -1,8 +1,3 @@
-/**********************************
- * IFPB - Curso Superior de Tec. em Sist. para Internet
- * POO
- * Prof. Fausto Maranh�o Ayres
- **********************************/
 package repositorio;
 
 import java.io.File;
@@ -15,68 +10,60 @@ import modelo.Correntista;
 import modelo.Conta;
 
 public class Repositorio {
-	private ArrayList<Conta> conta = new ArrayList<>();
-	private ArrayList<Correntista> correntista = new ArrayList<>(); 
+	private ArrayList<Conta> contas = new ArrayList<>();
+	private ArrayList<Correntista> correntistas = new ArrayList<>(); 
 
 	public Repositorio() {
 		carregarObjetos();
 	}
-	public void adicionar(Conta c)	{
-		conta.add(c);
+	
+	public void adicionar(Conta conta)	{
+		contas.add(conta);
+	}
+	public void remover(Conta conta)	{
+		contas.remove(conta);
+	}
+	public void adicionar(Correntista corren)	{
+		correntistas.add(corren);
+	}
+	public void remover(Correntista corren)	{
+		correntistas.remove(corren);
 	}
 
-	public void remover(Conta c)	{
-		conta.remove(c);
-	}
-
-	public Conta localizarParticipante(String nome)	{
-		for(Conta c : conta)
-			if(c.getNome().equals(nome))
+	public Correntista localizarCorrentista(String cpf)	{
+		for(Correntista c : correntistas)
+			if(c.getCPF().equals(cpf))
 				return c;
 		return null;
 	}
 
-	public void adicionar(Evento e)	{
-		correntista.add(e);
-	}
-	public void remover(Evento e)	{
-		correntista.remove(e);
-	}
-
-	public Correntista localizarEvento(int id)	{
-		for(Correntista e : correntista)
-			if(e.getId() == id)
-				return e;
+	public Conta localizarConta(int id)	{
+		for(Conta con : contas)
+			if(con.getId() == id)
+				return con;
 		return null;
 	}
-	public Correntista localizarEvento(String data)	{
-		for(Correntista c : correntista)
-			if(c.getData().equals(data))
-				return c;
-		return null;
-	}
-
-	public ArrayList<Conta> getParticipantes() 	{
-		return conta;
+	public ArrayList<Conta> getContas() 	{
+		return contas;
 	}
 	
-	public ArrayList<Correntista> getEventos() 	{
-		return correntista;
+	public ArrayList<Correntista> getCorrentistas() 	{
+		return correntistas;
 	}
 
-	public int getTotalParticipante()	{
-		return conta.size();
+	public int getTotalConta()	{
+		return contas.size();
 	}
 
-	public int getTotalEventos()	{
-		return correntista.size();
+	public int getTotalCorrentista()	{
+		return correntistas.size();
 	}
 
-	public int gerarIdEvento() {
-		if (correntista.isEmpty())
+	public int gerarIdConta() {
+		if (contas.isEmpty())
 			return 1;
 		else {
-			Correntista ultimo = correntista.get(correntista.size()-1);
+			Conta ultimo = contas.get(contas.size()-1);
 			return ultimo.getId() + 1;
 		}
 	}
@@ -103,66 +90,70 @@ public class Repositorio {
 		Conta c;
 
 		try	{
-			String data, descricao, id, preco ;
-			File f = new File( new File(".\\correntista.csv").getCanonicalPath());
+			String cpf, nome, senha ;
+			File f = new File( new File(".\\correntistas.csv").getCanonicalPath());
 			Scanner arquivo1 = new Scanner(f);	 
 			while(arquivo1.hasNextLine()) 	{
 				linha = arquivo1.nextLine().trim();		
 				partes = linha.split(";");	
 				//System.out.println(Arrays.toString(partes));
-				id = partes[0];
-				data = partes[1];
-				descricao = partes[2];
-				preco = partes[3];
-				co = new Correntista(Integer.parseInt(id), descricao, data, Double.parseDouble(preco));
+				cpf = partes[0];
+				nome = partes[1];
+				senha = partes[2];
+				co = new Correntista(Integer.parseInt(cpf), nome, senha);
 				this.adicionar(co);
 			} 
 			arquivo1.close();
 		}
 		catch(Exception ex)		{
-			throw new RuntimeException("leitura arquivo de eventos:"+ex.getMessage());
+			throw new RuntimeException("leitura arquivo de conta:"+ex.getMessage());
 		}
 
 		try	{
-			String tipo,nome, email, empresa, idade, ids;
-			File f = new File( new File(".\\participantes.csv").getCanonicalPath())  ;
+			String tipo, id, data, saldo, limite, cpfs;
+			File f = new File( new File(".\\contas.csv").getCanonicalPath())  ;
 			Scanner arquivo2 = new Scanner(f);	 
 			while(arquivo2.hasNextLine()) 	{
 				linha = arquivo2.nextLine().trim();	
 				partes = linha.split(";");
 				//System.out.println(Arrays.toString(partes));
 				tipo = partes[0];
-				email = partes[1];
-				nome = partes[2];
-				idade = partes[3];
-				ids="";
-				if(tipo.equals("PARTICIPANTE")) {
-					p = new Participante(email,nome,Integer.parseInt(idade));
-					this.adicionar(p);
-					if(partes.length>4)
-						ids = partes[4];		//ids dos eventos separados por ","
+				id = partes[1];
+				data = partes[2];
+				saldo = partes[3];
+				limite= partes.length > 4 ? partes[4] : "50";
+				cpfs = "";
+				if(tipo.equals("ESPECIAL")) {
+					double limiteDouble = Double.parseDouble(limite);
+		            if (limiteDouble < 50) {
+		                limiteDouble = 50; 
+		            }
+		            c = new ContaEspecial(Integer.parseInt(id), data, Double.parseDouble(saldo), limiteDouble);
+					this.adicionar(c);
+					cpfs = partes[5];
+					
 				}
 				else {
-					empresa = partes[4];
-					p = new Convidado(email,nome,Integer.parseInt(idade),empresa);
-					this.adicionar(p);
-					if(partes.length>5)
-						ids = partes[5];		//ids dos eventos separados por ","
+					limite = partes[4];
+					c = new Conta(Integer.parseInt(id), data, Double.parseDouble(saldo));
+					this.adicionar(c);
+					cpfs = partes[5];
 				}
 
-				//relacionar participante com os seus eventos
-				if(!ids.isEmpty()) {	
-					for(String idevento : ids.split(",")){	//converter string em array
-						ev = this.localizarEvento(Integer.parseInt(idevento));
-						ev.adicionar(p);
-						p.adicionar(ev);
-					}
-				}
-			}
+				// Relacionar correntista com suas contas
+	            if (!cpfs.isEmpty()) {
+	                for (String cpfCorrentista : cpfs.split(",")) {
+	                    Correntista con = this.localizarCorrentista(cpfs);
+	                    con.adicionar(c); // Adiciona a conta ao correntista
+	                    c.adicionar(con); // Adiciona o correntista à conta
+	               
+	                }
+	            }
+	        }
 			arquivo2.close();
 		}
 		catch(Exception ex)		{
-			throw new RuntimeException("leitura arquivo de participantes:"+ex.getMessage());
+			throw new RuntimeException("leitura arquivo de contas:"+ex.getMessage());
 		}
 	}
 
@@ -170,42 +161,42 @@ public class Repositorio {
 	public void	salvarObjetos()  {
 		//gravar nos arquivos csv os objetos que est�o no reposit�rio
 		try	{
-			File f = new File( new File(".\\eventos.csv").getCanonicalPath())  ;
+			File f = new File( new File(".\\correntistas.csv").getCanonicalPath())  ;
 			FileWriter arquivo1 = new FileWriter(f); 
-			for(Evento e : correntista) 	{
-				arquivo1.write(e.getId()+";"+e.getData()+";"+e.getDescricao()+";"+e.getPreco()+"\n");	
+			for(Correntista con : correntistas) 	{
+				arquivo1.write(con.getCPF()+";"+con.getNome()+";"+con.getSenha()+";"+"\n");	
 			} 
 			arquivo1.close();
 		}
 		catch(Exception e){
-			throw new RuntimeException("problema na cria��o do arquivo  eventos "+e.getMessage());
+			throw new RuntimeException("problema na cria��o do arquivo correntista "+e.getMessage());
 		}
 
 		try	{
-			File f = new File( new File(".\\participantes.csv").getCanonicalPath())  ;
+			File f = new File( new File(".\\contas.csv").getCanonicalPath())  ;
 			FileWriter arquivo2 = new FileWriter(f) ; 
 			ArrayList<String> lista ;
-			String listaId;
-			for(Participante p : conta) {
-				//montar uma lista com os id dos eventos do participante
+			String listacpf;
+			for(Conta c : contas) {
+				//montar uma lista com os id das contas do correntista
 				lista = new ArrayList<>();
-				for(Evento e : p.getEventos()) {
-					lista.add(e.getId()+"");
+				for(Correntista con : c.getCorrentistas()) {
+					lista.add(con.getCPF()+"");
 				}
-				listaId = String.join(",", lista);
+				listacpf = String.join(",", lista);
 
-				if(p instanceof Convidado c )
-					arquivo2.write("CONVIDADO;" +p.getEmail() +";" + p.getNome() +";" 
-							+ p.getIdade() +";"+ c.getEmpresa() +";"+ listaId +"\n");	
+				if(c instanceof ContaEspecial e )
+					arquivo2.write("CONTA;" +c.getId() +";" + c.getData() +";" 
+							+ c.getSaldo() +";"+ e.getLimite() +";"+ listacpf +"\n");	
 				else
-					arquivo2.write("PARTICIPANTE;" +p.getEmail() +";" + p.getNome() +";" 
-							+ p.getIdade() +";"+ listaId +"\n");	
+					arquivo2.write("CONTAESPECIAL;" +c.getId() +";" + c.getData() +";" 
+							+ c.getSaldo() +";"+ listacpf +"\n");	
 
 			} 
 			arquivo2.close();
 		}
 		catch (Exception e) {
-			throw new RuntimeException("problema na cria��o do arquivo  participantes "+e.getMessage());
+			throw new RuntimeException("problema na cria��o do arquivo contas "+e.getMessage());
 		}
 
 	}
