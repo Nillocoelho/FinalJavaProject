@@ -17,16 +17,16 @@ public class Repositorio {
 		carregarObjetos();
 	}
 	
-	public void adicionarConta(Conta c)	{
+	public void adicionar(Conta c)	{
 		contas.add(c);
 	}
-	public void removerConta(Conta conta)	{
+	public void remover(Conta conta)	{
 		contas.remove(conta);
 	}
-	public void adicionarCorrentista(Correntista correntista)	{
+	public void adicionar(Correntista correntista)	{
 		correntistas.add(correntista);
 	}
-	public void removerCorrentista(Correntista correntista)	{
+	public void remover(Correntista correntista)	{
 		correntistas.remove(correntista);
 	}
 
@@ -100,7 +100,7 @@ public class Repositorio {
 				nome = partes[1];
 				senha = partes[2];
 				co = new Correntista(cpf, nome, senha);
-				this.adicionarCorrentista(co);
+				this.adicionar(co);
 				if (partes.length > 3) {
 					String ids;
 					ids = partes[3];
@@ -132,12 +132,12 @@ public class Repositorio {
 				if(tipo.equals("ESPECIAL")) {
 					limite = partes[4];
 		            c = new ContaEspecial(Integer.parseInt(id), data, Double.parseDouble(saldo), Double.parseDouble(limite));
-					this.adicionarConta(c);
+					this.adicionar(c);
 					
 				}
 				else {
 					c = new Conta(Integer.parseInt(id), data, Double.parseDouble(saldo));
-					this.adicionarConta(c);
+					this.adicionar(c);
 				}
 
 	        }
