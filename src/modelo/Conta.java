@@ -11,7 +11,7 @@ public class Conta {
 		super();
 		this.id = id;
 		this.data = data;
-		this.saldo = saldo;
+		this.saldo = 0;
 	}
 	public void creditar(double valor) {
 		this.saldo += valor;
