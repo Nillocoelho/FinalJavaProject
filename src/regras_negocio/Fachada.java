@@ -41,17 +41,17 @@ public class Fachada {
 			
 		if(!co.getSenha().matches("\\d{4}"))
 			throw new Exception("A senha deve ter 4 números");
-		 co = new Correntista(cpf, nome, senha);
-		 
-		 repositorio.adicionarCorrentista(co);
+		
+		co = new Correntista(cpf, nome, senha);
+		 repositorio.adicionar(co);
 		 repositorio.salvarObjetos();
 	}
-	public static void criarConta(int id)throws Exception{
+	public static void criarConta(int id){ 
 		Conta c = repositorio.localizarConta(id);
-			if(c.getId() == id)
-				throw new Exception("Erro, já existe uma conta vinculada a esse ID");
-			
-		 repositorio.adicionarConta(c);
+			if(c.getId() != id)
+				id += 1;
+		c = new Conta(id,data,saldo);	
+		 repositorio.adicionar(c);
 		 repositorio.salvarObjetos();
 	}
 	public static void criarContaEspecial(String cpf, double limite) throws Exception{
@@ -59,8 +59,8 @@ public class Fachada {
 	        if (co == null) 
 	            throw new Exception("Correntista com CPF " + cpf + " não encontrado.");
 
-	        Conta contaEspecial = new Conta(cpf,limite);
-	        repositorio.adicionarConta(contaEspecial);
+	        Conta contaEspecial = new Conta(co,limite);
+	        repositorio.adicionar(contaEspecial);
 	        repositorio.salvarObjetos();
 	    }
 	public static void inserirCorrentistaConta(int id, String cpf){
@@ -71,24 +71,26 @@ public class Fachada {
 		if(!co.getContas().isEmpty())
 			throw new Exception("Erro ao apagar correntista: " + cpf + " ainda tem conta");
 		
+		repositorio.remover(co);
+		repositorio.salvarObjetos();
 	}
 	public static void apagarConta(int id)throws Exception{
 		Conta c = repositorio.localizarConta(id);
 		if (c.getSaldo() > 0)
             throw new Exception("Conta com saldo, não é possivel apagar!");
 		
-		repositorio.removerConta(c);
+		repositorio.remover(c);
 		repositorio.salvarObjetos();
 	}
 	public static void creditarValor(int id, String cpf, String senha, double valor)throws Exception{
         Conta c = repositorio.localizarConta(id);
         if (c == null)
-            throw new Exception("Correntista com ID " + id + " não encontrado.");
+            throw new Exception("Conta com ID " + id + " não encontrado.");
 	}
 	public static void debitarValor(int id, String cpf, String senha, double valor)throws Exception{
 		Conta c = repositorio.localizarConta(id);
         if (c == null)
-            throw new Exception("Correntista com ID " + id + " não encontrado.");
+            throw new Exception("Conta com ID " + id + " não encontrado.");
         
 		if (c.getSaldo() < valor) {
 			throw new Exception("Conta com saldo insuficiente para realizar a transação");
