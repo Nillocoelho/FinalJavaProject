@@ -17,77 +17,38 @@ public class Repositorio {
 		carregarObjetos();
 	}
 	
-	public void adicionar(Conta conta)	{
-		contas.add(conta);
+	public void adicionarConta(Conta c)	{
+		contas.add(c);
 	}
-	public void remover(Conta conta)	{
+	public void removerConta(Conta conta)	{
 		contas.remove(conta);
 	}
-	public void adicionar(Correntista corren)	{
-		correntistas.add(corren);
+	public void adicionarCorrentista(Correntista correntista)	{
+		correntistas.add(correntista);
 	}
-	public void remover(Correntista corren)	{
-		correntistas.remove(corren);
+	public void removerCorrentista(Correntista correntista)	{
+		correntistas.remove(correntista);
 	}
 
-<<<<<<< HEAD
 	public Correntista localizarCorrentista(String cpf)	{
-		for(Correntista c : correntistas)
-			if(c.getCPF().equals(cpf))
-=======
-	public void remover(Conta c)	{
-		conta.remove(c);
+		for(Correntista co : correntistas)
+			if(co.getCpf().equals(cpf))
+				return co;
+		return null;
 	}
 
-	public Conta localizarContas(int id){
-		for(Conta c : conta)
-			if(c.getid(id) == id)
->>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
+	public Conta localizarConta(int id)	{
+		for(Conta c : contas)
+			if(c.getId() == id)
 				return c;
 		return null;
 	}
-
-<<<<<<< HEAD
-	public Conta localizarConta(int id)	{
-		for(Conta con : contas)
-			if(con.getId() == id)
-				return con;
-		return null;
-	}
-	public ArrayList<Conta> getContas() 	{
+	public ArrayList<Conta> getContas(){
 		return contas;
 	}
 	
-	public ArrayList<Correntista> getCorrentistas() 	{
+	public ArrayList<Correntista> getCorrentistas(){
 		return correntistas;
-=======
-	public void adicionar(Correntista e)	{
-		correntista.add(e);
-	}
-	public void remover(Correntista e)	{
-		correntista.remove(e);
-	}
-
-	public Correntista localizarEvento(int id)	{
-		for(Correntista e : correntista)
-			if(e.getId() == id)
-				return e;
-		return null;
-	}
-	public Correntista localizarEvento(String data)	{
-		for(Correntista c : correntista)
-			if(c.getData().equals(data))
-				return c;
-		return null;
-	}
-
-	public ArrayList<Conta> getConta() 	{
-		return conta;
-	}
-	
-	public ArrayList<Correntista> getCorrentista() 	{
-		return correntista;
->>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
 	}
 
 	public int getTotalConta()	{
@@ -135,13 +96,21 @@ public class Repositorio {
 			while(arquivo1.hasNextLine()) 	{
 				linha = arquivo1.nextLine().trim();		
 				partes = linha.split(";");	
-				//System.out.println(Arrays.toString(partes));
 				cpf = partes[0];
 				nome = partes[1];
 				senha = partes[2];
-				co = new Correntista(Integer.parseInt(cpf), nome, senha);
-				this.adicionar(co);
-			} 
+				co = new Correntista(cpf, nome, senha);
+				this.adicionarCorrentista(co);
+				if (partes.length > 3) {
+					String ids;
+					ids = partes[3];
+					for (String id : ids.split(",")) { // converter string em array
+						c = this.localizarConta(Integer.parseInt(id));
+						c.adicionarCorrentista(co);
+						co.adicionarConta(c);
+					}
+				}
+			}
 			arquivo1.close();
 		}
 		catch(Exception ex)		{
@@ -149,7 +118,7 @@ public class Repositorio {
 		}
 
 		try	{
-			String tipo, id, data, saldo, limite, cpfs;
+			String tipo, id, data, saldo, limite;
 			File f = new File( new File(".\\contas.csv").getCanonicalPath())  ;
 			Scanner arquivo2 = new Scanner(f);	 
 			while(arquivo2.hasNextLine()) 	{
@@ -160,34 +129,17 @@ public class Repositorio {
 				id = partes[1];
 				data = partes[2];
 				saldo = partes[3];
-				limite= partes.length > 4 ? partes[4] : "50";
-				cpfs = "";
 				if(tipo.equals("ESPECIAL")) {
-					double limiteDouble = Double.parseDouble(limite);
-		            if (limiteDouble < 50) {
-		                limiteDouble = 50; 
-		            }
-		            c = new ContaEspecial(Integer.parseInt(id), data, Double.parseDouble(saldo), limiteDouble);
-					this.adicionar(c);
-					cpfs = partes[5];
+					limite = partes[4];
+		            c = new ContaEspecial(Integer.parseInt(id), data, Double.parseDouble(saldo), Double.parseDouble(limite));
+					this.adicionarConta(c);
 					
 				}
 				else {
-					limite = partes[4];
 					c = new Conta(Integer.parseInt(id), data, Double.parseDouble(saldo));
-					this.adicionar(c);
-					cpfs = partes[5];
+					this.adicionarConta(c);
 				}
 
-				// Relacionar correntista com suas contas
-	            if (!cpfs.isEmpty()) {
-	                for (String cpfCorrentista : cpfs.split(",")) {
-	                    Correntista con = this.localizarCorrentista(cpfs);
-	                    con.adicionar(c); // Adiciona a conta ao correntista
-	                    c.adicionar(con); // Adiciona o correntista à conta
-	               
-	                }
-	            }
 	        }
 			arquivo2.close();
 		}
@@ -198,49 +150,50 @@ public class Repositorio {
 
 	//--------------------------------------------------------------------
 	public void	salvarObjetos()  {
-		//gravar nos arquivos csv os objetos que est�o no reposit�rio
+		//gravar nos arquivos csv os objetos que est o no reposit rio
 		try	{
 			File f = new File( new File(".\\correntistas.csv").getCanonicalPath())  ;
 			FileWriter arquivo1 = new FileWriter(f); 
-			for(Correntista con : correntistas) 	{
-				arquivo1.write(con.getCPF()+";"+con.getNome()+";"+con.getSenha()+";"+"\n");	
-			} 
+			String linha, ids;
+			ArrayList<String> listaId;
+			for(Correntista co : correntistas) 	{
+				if (co.getContas().isEmpty()) 
+					linha = co.getCpf() + ";" + co.getNome() + ";" + co.getSenha() + "\n";
+				else {
+					//montar uma lista com os ids das contas
+					listaId = new ArrayList<>();
+					for (Conta c : co.getContas()) {
+						listaId.add(c.getId() + "");
+					}
+					ids = String.join(",", listaId);
+					linha = co.getCpf() + ";" + co.getNome() + ";" + co.getSenha() + ";" + ids + "\n";
+				}
+				arquivo1.write(linha);
+				//System.out.println("gravando:"+linha);
+			}
 			arquivo1.close();
 		}
 		catch(Exception e){
-			throw new RuntimeException("problema na cria��o do arquivo correntista "+e.getMessage());
+			throw new RuntimeException("problema na cria  o do arquivo correntista "+ e.getMessage());
 		}
 
 		try	{
 			File f = new File( new File(".\\contas.csv").getCanonicalPath())  ;
 			FileWriter arquivo2 = new FileWriter(f) ; 
-			ArrayList<String> lista ;
-			String listacpf;
 			for(Conta c : contas) {
 				//montar uma lista com os id das contas do correntista
-				lista = new ArrayList<>();
-<<<<<<< HEAD
-				for(Correntista con : c.getCorrentistas()) {
-					lista.add(con.getCPF()+"");
-=======
-				for(Evento e : p.getCorrentista()) {
-					lista.add(e.getId()+"");
->>>>>>> bca41922c7f6feae3299f80fd4e38bb52f845c21
-				}
-				listacpf = String.join(",", lista);
-
 				if(c instanceof ContaEspecial e )
 					arquivo2.write("CONTA;" +c.getId() +";" + c.getData() +";" 
-							+ c.getSaldo() +";"+ e.getLimite() +";"+ listacpf +"\n");	
+							+ c.getSaldo() +";"+ e.getLimite() +";"+"\n");	
 				else
 					arquivo2.write("CONTAESPECIAL;" +c.getId() +";" + c.getData() +";" 
-							+ c.getSaldo() +";"+ listacpf +"\n");	
+							+ c.getSaldo() +";"+"\n");	
 
 			} 
 			arquivo2.close();
 		}
 		catch (Exception e) {
-			throw new RuntimeException("problema na cria��o do arquivo contas "+e.getMessage());
+			throw new RuntimeException("problema na cria  o do arquivo contas "+e.getMessage());
 		}
 
 	}
