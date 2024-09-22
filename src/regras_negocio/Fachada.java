@@ -57,8 +57,15 @@ public class Fachada {
 		 repositorio.adicionarConta(c);
 		 repositorio.salvarObjetos();
 	}
-	public static void criarContaEspecial(String cpf, double limite){
-		
+	public static void criarContaEspecial(String cpf, double limite) throws Exception{
+	        Correntista correntista = repositorio.localizarCorrentista(cpf);
+	        if (correntista == null) {
+	            throw new Exception("Correntista com CPF " + cpf + " não encontrado.");
+	        }
+//	        Conta contaEspecial = new Conta(correntista, limite);
+//	        repositorio.adicionarConta(contaEspecial);
+//	        repositorio.salvarObjetos();
+	    }
 	}
 	public static void inserirCorrentistaConta(int id, String cpf){
 		
@@ -73,13 +80,13 @@ public class Fachada {
 		
 	}
 	public static void debitarValor(int id, String cpf, String senha, double valor)throws Exception{
-		if (Conta.GetSaldo() < valor) {
-			throw new Exception("Conta com saldo insuficiente para realizar a transação");
-		}
+//		if (Conta.GetSaldo() < valor) {
+//			throw new Exception("Conta com saldo insuficiente para realizar a transação");
+//		}
 	}
 	public static void transferirValor(int id, String cpf, String senha, double valor, int id2) throws Exception{
-		for 
-			throw new Exception("Conta não encontrada.");
+//		for 
+//			throw new Exception("Conta não encontrada.");
 	}
 
 
