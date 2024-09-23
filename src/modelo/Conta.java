@@ -10,8 +10,8 @@ public class Conta {
 	public Conta(int id, String data, double saldo){
 		super();
 		this.id = id;
-		this.data = data;
-		this.saldo = 0;
+        this.data = data;
+		this.saldo = saldo;
 	}
 	public void creditar(double valor) {
 		this.saldo += valor;

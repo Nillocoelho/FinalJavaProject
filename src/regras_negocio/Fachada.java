@@ -1,5 +1,7 @@
 package regras_negocio;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import repositorio.Repositorio;
 import modelo.Conta;
@@ -34,6 +36,7 @@ public class Fachada {
 	public static void criarCorrentista(String cpf,String nome,String senha)throws Exception{
 		cpf = cpf.trim();
 		nome = nome.trim();
+		System.out.println("Funcionou");
 		Correntista co = repositorio.localizarCorrentista(cpf);
 		
 		if(co.getCpf().equals(cpf))
@@ -47,24 +50,45 @@ public class Fachada {
 		 repositorio.salvarObjetos();
 	}
 	public static void criarConta(int id){ 
+		System.out.println("Funcionou");
 		Conta c = repositorio.localizarConta(id);
 			if(c.getId() != id)
 				id += 1;
-		c = new Conta(id,data,saldo);	
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String data = LocalDate.now().format(formatter);
+		double saldo = 0;
+		c = new Conta(id,data,saldo);
+		
 		 repositorio.adicionar(c);
 		 repositorio.salvarObjetos();
 	}
-	public static void criarContaEspecial(String cpf, double limite) throws Exception{
-	        Correntista co = repositorio.localizarCorrentista(cpf);
-	        if (co == null) 
-	            throw new Exception("Correntista com CPF " + cpf + " não encontrado.");
-
-	        Conta contaEspecial = new Conta(co,limite);
-	        repositorio.adicionar(contaEspecial);
-	        repositorio.salvarObjetos();
-	    }
-	public static void inserirCorrentistaConta(int id, String cpf){
+//	public static void criarContaEspecial(String cpf, double limite) throws Exception{
+//	        Correntista co = repositorio.localizarCorrentista(cpf);
+//	        if (co == null) 
+//	            throw new Exception("Correntista com CPF " + cpf + " não encontrado.");
+//
+//	        ContaEspecial contaEspecial = new ContaEspecial(co,limite);
+//	        repositorio.adicionar(contaEspecial);
+//	        repositorio.salvarObjetos();
+//	    }
+	public static void inserirCorrentistaConta(int id, String cpf) throws Exception{
+		cpf = cpf.trim();
+		Correntista co = repositorio.localizarCorrentista(cpf);
+		if(co == null) 
+			throw new Exception("falha ao adicionar correntista:  " + cpf + " inexistente");
 		
+		Conta c = repositorio.localizarConta(id);
+		if(c == null)
+			throw new Exception("falha ao adicionar correntista:  " + id + " inexistente");
+		
+//		if()
+		
+		//adicionar o correntista a conta
+		c.adicionarCorrentista(co);
+		//adicionar a conta ao correntista
+		co.adicionarConta(c);
+		//gravar repositorio
+		repositorio.salvarObjetos();
 	}
 	public static void removerCorrentistaConta(int id, String cpf)throws Exception{
 		Correntista co = repositorio.localizarCorrentista(cpf);
@@ -102,3 +126,5 @@ public class Fachada {
 			throw new Exception("Conta não encontrada.");
 	}
 }
+
+

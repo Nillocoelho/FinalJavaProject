@@ -9,6 +9,7 @@ import modelo.ContaEspecial;
 import modelo.Correntista;
 import modelo.Conta;
 
+
 public class Repositorio {
 	private ArrayList<Conta> contas = new ArrayList<>();
 	private ArrayList<Correntista> correntistas = new ArrayList<>(); 
@@ -101,7 +102,7 @@ public class Repositorio {
 				senha = partes[2];
 				co = new Correntista(cpf, nome, senha);
 				this.adicionar(co);
-				if (partes.length > 3) {
+				if (partes.length >= 3) {
 					String ids;
 					ids = partes[3];
 					for (String id : ids.split(",")) { // converter string em array
