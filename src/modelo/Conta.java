@@ -2,9 +2,9 @@ package modelo;
 import java.util.ArrayList;
 
 public class Conta {
-	private int id;
-	private String data;
-	private double saldo;
+	protected int id;
+	protected String data;
+	protected double saldo;
 	private ArrayList<Correntista> correntistas = new ArrayList<Correntista>();
 	
 	public Conta(int id, String data, double saldo){
@@ -32,15 +32,18 @@ public class Conta {
 	public double getSaldo() {
 		return saldo;
 	}
-	public ArrayList<Correntista> getCorrentista() {
+	public void remover(Correntista co){
+		correntistas.remove(co);
+	}
+	public ArrayList<Correntista> getCorrentistas() {
 		return correntistas;
 	}
-	public void adicionarCorrentista(Correntista co) {
+	public void adicionar(Correntista co) {
 		correntistas.add(co);
 	}
 	@Override
 	public String toString() {
-		return "Conta [id=" + id + ", data=" + data + ", saldo=" + saldo + ", correntista=" + correntistas + "]";
+		return "Conta Simples: id=" + id + ", data=" + data + ", saldo=" + saldo + ", correntista=" + correntistas;
 	}	
 	
 }
