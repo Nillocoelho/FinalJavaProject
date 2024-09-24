@@ -123,7 +123,7 @@ public class Repositorio {
 				// Verificar se há IDS
 				if (!ids.isEmpty()) {
 					for (String id : ids.split(",")) { // converter string em array
-						c = this.localizarConta(Integer.parseInt(id));
+						c = localizarConta(Integer.parseInt(id));
 						c.adicionar(co);
 						co.adicionar(c);
 					}

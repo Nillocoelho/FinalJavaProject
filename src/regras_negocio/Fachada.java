@@ -5,6 +5,7 @@ import repositorio.Repositorio;
 import modelo.Conta;
 import modelo.ContaEspecial;
 import modelo.Correntista;
+import modelo.Participante;
 
 public class Fachada {
 	private Fachada() {

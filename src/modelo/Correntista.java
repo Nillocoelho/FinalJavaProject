@@ -49,7 +49,7 @@ public class Correntista {
 
 	@Override
 	public String toString() {
-		return "Correntista:" + cpf + ", nome=" + nome + ", senha=" + senha;
+		return "Correntista:" + cpf + ", nome=" + nome + ", senha=" + senha + "Contas=" + contas;
 	}
 
 }
