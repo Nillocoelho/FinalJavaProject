@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import modelo.ContaEspecial;
@@ -23,6 +24,7 @@ public class Repositorio {
 	public void adicionar(Conta c) {
 		contas.add(c);
 	}
+	
 
 	public void remover(Conta c) {
 		contas.remove(c);
@@ -30,10 +32,13 @@ public class Repositorio {
 
 	public void adicionar(Correntista co) {
 		correntistas.add(co);
+		correntistas.sort(Comparator.comparing(Correntista::getCpf));
 	}
+	
 
 	public void remover(Correntista co) {
 		correntistas.remove(co);
+		correntistas.sort(Comparator.comparing(Correntista::getCpf));
 	}
 
 	public Correntista localizarCorrentista(String cpf) {
@@ -139,13 +144,15 @@ public class Repositorio {
 			while (arquivo1.hasNextLine()) {
 				linha = arquivo1.nextLine().trim();
 				partes = linha.split(";");
-				//System.out.println(Arrays.toString(partes));
 				cpf = partes[0];
 				nome = partes[1];
 				senha = partes[2];
+				
+				// Verifica se o correntista já foi adicionado
 				correntista = new Correntista(cpf, nome, senha);
 				this.adicionar(correntista);
-
+				
+				// Relacionar correntista com suas contas
 				if (partes.length > 3) {
 					String ids;
 					ids = partes[3]; 	// ids dos correntistas separados por ","

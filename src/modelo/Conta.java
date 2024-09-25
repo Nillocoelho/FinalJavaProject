@@ -45,21 +45,25 @@ public class Conta {
 	public boolean contemCorrentista(Correntista correntista) {
         return correntistas.contains(correntista);
     }
+	public boolean verificarTitular(String cpf) {
+		if (this.correntistas.getFirst().getCpf().equals(cpf)) {
+			return true;
+		}
+		return false;
+	}
 	@Override
 	public String toString() {
 		String texto = "Conta: IdConta=" + id + ", Data=" + data + ", Saldo=" + saldo;
-		texto += ", Titular: ";
+	    texto += ", Titulares: ";
 
 	    List<Correntista> correntistas = getCorrentistas();
+	   
+
 	    if (!correntistas.isEmpty()) {
-	        texto += correntistas.get(0).getNome(); // Titular 
-	        if (correntistas.size() > 1) {
-	            texto += ", Co-titulares: ";
-	            for (int i = 1; i < correntistas.size(); i++) {
-	                texto += correntistas.get(i).getNome();
-	                if (i < correntistas.size() - 1) {
-	                    texto += ", "; // Adiciona vírgula entre co-titulares
-	                }
+	        for (int i = 0; i < correntistas.size(); i++) {
+	            texto += correntistas.get(i).getNome();
+	            if (i < correntistas.size() - 1) {
+	                texto += ", "; 
 	            }
 	        }
 	    } else {

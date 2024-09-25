@@ -61,7 +61,7 @@ public class Fachada {
 	    if (co.temConta()) {
 	        throw new Exception("Correntista com CPF " + cpf + " já é titular de uma conta.");
 	    }
-
+	    
 		int id = repositorio.gerarIdConta();
 
 		String dataAtual = repositorio.dataFormatada();
@@ -72,6 +72,7 @@ public class Fachada {
 
 		// Adicionar a conta ao repositório
 		co.adicionar(c);
+		c.adicionar(co);
 		repositorio.adicionar(c);
 		repositorio.salvarObjetos();
 
@@ -110,6 +111,7 @@ public class Fachada {
 
 		// Adiciona a conta Especial ao repositório
 		co.adicionar(contaEspecial);
+		contaEspecial.adicionar(co);
 		repositorio.adicionar(contaEspecial);
 		repositorio.salvarObjetos();
 
@@ -135,7 +137,8 @@ public class Fachada {
 		c.adicionar(co);
 		// adicionar a conta ao correntista
 		co.adicionar(c);
-		// gravar repositorio
+		
+
 		repositorio.salvarObjetos();
 
 		System.out.println("Correntista " + co.getNome() + " adicionado como cotitular na conta ID " + id + ".");
@@ -152,13 +155,18 @@ public class Fachada {
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 		
+		if (c.getCorrentistas().getFirst().getCpf().equals(cpf)) 
+			throw new Exception("O correntista informado é o titular da conta e não pode ser removido.");
+		
+		 c.remover(co);
+		    
+		 co.remover(c);
 
-		// Remover o correntista da conta
-	    c.remover(co);
-	    // Remover a conta do correntista
-	    co.remover(c);
-	    
-		repositorio.salvarObjetos();
+		 repositorio.salvarObjetos();
+	       
+		System.out.println("Correntista " + co.getNome() + " removido como cotitular na conta ID " + id + ".");
+		
+	   
 	}
 
 	public static void apagarConta(int id) throws Exception {

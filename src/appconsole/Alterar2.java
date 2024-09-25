@@ -14,7 +14,7 @@ public class Alterar2 {
 
 		try {
 //			Fachada.debitarValor (3,"0003", "3333", 1000.0);
-			Fachada.transferirValor(3,"0001","1111", 1000.0, 2);
+			Fachada.transferirValor(3,"0001","1111", 0, 2);
 			System.out.println("debitou ");
 		} catch (Exception e) {
 			System.out.println("--->" + e.getMessage());

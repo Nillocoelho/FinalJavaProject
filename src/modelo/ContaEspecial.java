@@ -26,18 +26,14 @@ public class ContaEspecial extends Conta {
 	@Override
 	public String toString() {
 		String texto = "Conta Especial: IdConta=" + id + ", Data=" + data + ", Saldo=" + saldo + ", Limite=" + getLimite();
-		texto += ", Titular: ";
-
-	    List<Correntista> correntistas = getCorrentistas();
-	    if (!correntistas.isEmpty()) {
-	        texto += correntistas.get(0).getNome(); // Titular
-	        if (correntistas.size() > 1) {
-	            texto += ", Co-titulares: ";
-	            for (int i = 1; i < correntistas.size(); i++) {
-	                texto += correntistas.get(i).getNome();
-	                if (i < correntistas.size() - 1) {
-	                    texto += ", "; // Adiciona vírgula entre co-titulares
-	                }
+		List<Correntista> correntistas = getCorrentistas();
+		texto += ", Titulares: ";
+		
+		if (!correntistas.isEmpty()) {
+	        for (int i = 0; i < correntistas.size(); i++) {
+	            texto += correntistas.get(i).getNome();
+	            if (i < correntistas.size() - 1) {
+	                texto += ", "; // Adiciona vírgula entre co-titulares
 	            }
 	        }
 	    } else {
