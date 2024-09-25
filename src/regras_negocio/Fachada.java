@@ -35,7 +35,7 @@ public class Fachada {
 		Correntista co = repositorio.localizarCorrentista(cpf);
 
 		if (co != null && co.getCpf().equals(cpf)) {
-			throw new Exception("Erro, CPF já se encontra no cadastro de correntista");
+			throw new Exception("Erro, CPF já se encontra no cadastro de correntista titulares");
 		}
 
 		if (senha.matches("\\d{3}")) {
@@ -56,6 +56,11 @@ public class Fachada {
 		if (co == null) {
 			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta.");
 		}
+		
+		// Verifica se o correntista já tem uma conta normal
+	    if (co.temConta()) {
+	        throw new Exception("Correntista com CPF " + cpf + " já é titular de uma conta.");
+	    }
 
 		int id = repositorio.gerarIdConta();
 
@@ -79,8 +84,17 @@ public class Fachada {
 		Correntista co = repositorio.localizarCorrentista(cpf);
 
 		if (co == null) {
-			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta.");
+			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta como titular.");
 		}
+		// Verifica se o correntista já tem uma conta
+	    if (co.temConta()) {
+	        throw new Exception("Correntista com CPF " + cpf + " já é titular de uma conta e não pode criar uma conta especial.");
+	    }
+
+	    // Verifica se já existe uma conta especial
+	    if (co.temContaEspecial()) {
+	        throw new Exception("Correntista com CPF " + cpf + " já é titular de uma conta especial.");
+	    }
 
 		if (limite < 50.0) {
 			throw new Exception("Erro: O limite da conta especial deve ser maior ou igual a 50 reais.");
@@ -113,7 +127,9 @@ public class Fachada {
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 
-//		if()
+		if (c.contemCorrentista(co)) {
+			throw new Exception("Correntista com CPF " + cpf + " já está cadastrado nesta conta como cotitular.");
+	    }
 
 		// adicionar o correntista a conta
 		c.adicionar(co);
@@ -135,11 +151,13 @@ public class Fachada {
 		Conta c = repositorio.localizarConta(id);
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
+		
 
-		if (!co.getContas().isEmpty())
-			throw new Exception("Erro ao apagar correntista: O " + cpf + " ainda tem conta associadas.");
-
-		repositorio.remover(co);
+		// Remover o correntista da conta
+	    c.remover(co);
+	    // Remover a conta do correntista
+	    co.remover(c);
+	    
 		repositorio.salvarObjetos();
 	}
 
@@ -149,7 +167,7 @@ public class Fachada {
 
 		// Verificar se a conta existe
 		if (c == null) {
-			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
+			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir ou já foi apagada!");
 		}
 		;
 		// Verificar se tem saldo
@@ -295,9 +313,17 @@ public class Fachada {
 			throw new Exception("O valor a ser transferido deve ser maior que zero.");
 		}
 
-		// Verifica se há saldo suficiente na conta de origem
-		if (cOrigem.getSaldo() < valor) {
-			throw new Exception("Saldo insuficiente na conta de origem para transferir R$ " + valor + ".");
+		// Verifica se a conta é uma ContaEspecial e realiza a operação
+		if (cOrigem instanceof ContaEspecial) {
+			ContaEspecial contaEspecial = (ContaEspecial) cOrigem;
+			if (contaEspecial.getSaldo() - valor < -contaEspecial.getLimite()) {
+				throw new Exception("Saldo insuficiente. O saldo pode ficar negativo até o limite da conta especial.");
+			}
+		} else {
+			// Para contas simples, verifica se o saldo é suficiente
+			if (cOrigem.getSaldo() < valor) {
+				throw new Exception("Saldo insuficiente para realizar a transação.");
+			}
 		}
 
 		// Debita o valor da conta de origem

@@ -22,6 +22,18 @@ public class Correntista {
 	public void adicionar(Conta c) {
 		contas.add(c);
 	}
+	public boolean temConta() {
+        return !contas.isEmpty();
+    }
+
+    public boolean temContaEspecial() {
+    	for (Conta conta : contas) {
+            if (conta instanceof ContaEspecial) {
+                return true; // Retorna true se encontrar uma conta especial
+            }
+        }
+        return false;
+    }
 
 	public void remover(Conta c) {
 		contas.remove(c);
@@ -49,12 +61,23 @@ public class Correntista {
 
 	@Override
 	public String toString() {
-		String texto = "Correntista:" + cpf + ", nome=" + nome + ", senha=" + senha;
-		texto += ", contas=";
-		for(Conta c : contas)
-			texto += c.getId() + ",";
-		return texto;
-		
+		String texto = "Correntista: CPF=" + cpf + ", Nome=" + nome + ", Senha=" + senha;
+	    texto += ", Contas: ";
+
+	    if (contas.isEmpty()) {
+	        texto += "Nenhuma conta cadastrada.";
+	    } else {
+	        for (int i = 0; i < contas.size(); i++) {
+	            Conta c = contas.get(i);
+	            if (i == 0) {
+	                texto += "Titular da conta ID " + c.getId(); // Primeira conta como titular
+	            } else {
+	                texto += ", Co-titular da conta ID " + c.getId(); // Contas seguintes como co-titular
+	            }
+	        }
+	    }
+
+	    return texto;
 	}
 
 }
