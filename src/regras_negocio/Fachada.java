@@ -5,7 +5,6 @@ import repositorio.Repositorio;
 import modelo.Conta;
 import modelo.ContaEspecial;
 import modelo.Correntista;
-import modelo.Participante;
 
 public class Fachada {
 	private Fachada() {
@@ -57,7 +56,6 @@ public class Fachada {
 		if (co == null) {
 			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta.");
 		}
-		// condição que se o cpf já existe cadastrado no sistema como titular, não pode ser colocado
 
 		int id = repositorio.gerarIdConta();
 
@@ -139,13 +137,14 @@ public class Fachada {
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 
 		if (!co.getContas().isEmpty())
-			throw new Exception("Erro ao apagar correntista: " + cpf + " ainda tem conta");
+			throw new Exception("Erro ao apagar correntista: O " + cpf + " ainda tem conta associadas.");
 
 		repositorio.remover(co);
 		repositorio.salvarObjetos();
 	}
 
 	public static void apagarConta(int id) throws Exception {
+		System.out.println("Oi");
 		Conta c = repositorio.localizarConta(id);
 
 		// Verificar se a conta existe

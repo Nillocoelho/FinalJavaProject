@@ -43,7 +43,11 @@ public class Conta {
 	}
 	@Override
 	public String toString() {
-		return "Conta Simples: id=" + id + ", data=" + data + ", saldo=" + saldo + ", correntista=" + correntistas;
+		String texto = "Conta: id=" + id + ", data=" + data + ", saldo=" + saldo;
+		texto += ", correntista=";
+		for(Correntista co : correntistas)
+			texto += co.getNome() + ",";
+		return texto;
 	}	
 	
 }

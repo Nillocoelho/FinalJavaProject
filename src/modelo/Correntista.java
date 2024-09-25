@@ -49,7 +49,12 @@ public class Correntista {
 
 	@Override
 	public String toString() {
-		return "Correntista:" + cpf + ", nome=" + nome + ", senha=" + senha + "Contas=" + contas;
+		String texto = "Correntista:" + cpf + ", nome=" + nome + ", senha=" + senha;
+		texto += ", contas=";
+		for(Conta c : contas)
+			texto += c.getId() + ",";
+		return texto;
+		
 	}
 
 }
