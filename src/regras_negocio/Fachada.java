@@ -130,7 +130,7 @@ public class Fachada {
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 
 		if (c.getCorrentistas().contains(co)) {
-			throw new Exception("Correntista com CPF " + cpf + " já está cadastrado na conta com ID " + id + " como cotitular.");
+			throw new Exception("Correntista com CPF " + cpf + " já está cadastrado na conta com ID " + id + ".");
 	    }
 
 		// adicionar o correntista a conta
