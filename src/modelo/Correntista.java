@@ -1,12 +1,13 @@
+
 package modelo;
 
 import java.util.ArrayList;
 
-public class Correntista implements Comparable<Correntista> {
+public class Correntista implements Comparable <Correntista> {
 	private String cpf;
 	private String nome;
 	private String senha;
-	private ArrayList<Conta> contas = new ArrayList<Conta>();
+	private ArrayList<Conta> contas = new ArrayList<>();
 
 	public Correntista(String cpf, String nome, String senha) {
 		super();
@@ -35,28 +36,24 @@ public class Correntista implements Comparable<Correntista> {
         return false;
     }
 
-	public void remover(Conta c) {
+	public void removerConta(Conta c) {
 		contas.remove(c);
 	}
 
-	public void inserirCorrentistaConta(Conta c) {
-		contas.add(c);
-	}
-
 	public String getCpf() {
-		return cpf;
+		return this.cpf;
 	}
 
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public String getSenha() {
-		return senha;
+		return this.senha;
 	}
 
 	public ArrayList<Conta> getContas() {
-		return contas;
+		return this.contas;
 	}
 
 	@Override

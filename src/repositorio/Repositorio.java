@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
 
 import modelo.ContaEspecial;
@@ -21,24 +20,20 @@ public class Repositorio {
 		salvarObjetos();
 	}
 
-	public void adicionar(Conta c) {
-		contas.add(c);
-	}
-	
+	public void adicionarConta(Conta c){
+        contas.add(c);
+    }
 
-	public void remover(Conta c) {
-		contas.remove(c);
-	}
+	public void removerConta(Conta c){
+        contas.remove(c);
+    }
 
-	public void adicionar(Correntista co) {
-		correntistas.add(co);
-		correntistas.sort(Comparator.comparing(Correntista::getCpf));
-	}
-	
+	public void adicionarCorrentista(Correntista co){
+        correntistas.add(co);
+    }
 
-	public void remover(Correntista co) {
+	public void removerCorrentista(Correntista co) {
 		correntistas.remove(co);
-		correntistas.sort(Comparator.comparing(Correntista::getCpf));
 	}
 
 	public Correntista localizarCorrentista(String cpf) {
@@ -122,13 +117,13 @@ public class Repositorio {
 				saldo = partes[3];
 				if (tipo.equals("CONTA")) {
 					conta = new Conta(Integer.parseInt(id), data, Double.parseDouble(saldo));
-					this.adicionar(conta);
+					this.adicionarConta(conta);
 				} 
 				else {
 					limite = partes[4];
 					conta = new ContaEspecial(Integer.parseInt(id), data, 
 							Double.parseDouble(saldo), Double.parseDouble(limite));
-					this.adicionar(conta);
+					this.adicionarConta(conta);
 				}
 			}
 			arquivo2.close();
@@ -144,22 +139,23 @@ public class Repositorio {
 			while (arquivo1.hasNextLine()) {
 				linha = arquivo1.nextLine().trim();
 				partes = linha.split(";");
+				//System.out.println(Arrays.toString(partes));
 				cpf = partes[0];
 				nome = partes[1];
 				senha = partes[2];
-				
-				// Verifica se o correntista já foi adicionado
 				correntista = new Correntista(cpf, nome, senha);
-				this.adicionar(correntista);
-				
-				// Relacionar correntista com suas contas
+				this.adicionarCorrentista(correntista);
+
 				if (partes.length > 3) {
 					String ids;
 					ids = partes[3]; 	// ids dos correntistas separados por ","
 					// relacionar correntista com suas contas
 					for (String idconta : ids.split(",")) { // converter string em array
 						conta = this.localizarConta(Integer.parseInt(idconta));
-						conta.adicionar(correntista);
+						if (conta.getCorrentistas().isEmpty()){
+							conta.adicionarCorrentistaTitular(correntista);
+						}else{
+						conta.adicionarCorrentista(correntista);}
 						correntista.adicionar(conta);
 					}
 				}
@@ -173,7 +169,7 @@ public class Repositorio {
 
 	// --------------------------------------------------------------------
 	public void salvarObjetos() {
-		// gravar nos arquivos csv os objetos que estão no repositório
+		// gravar nos arquivos csv os objetos que est�o no reposit�rio
 		//******** gravar correntistas *****		
 		try {
 			File f = new File(new File("correntistas.csv").getCanonicalPath());
@@ -198,7 +194,7 @@ public class Repositorio {
 			arquivo1.close();
 		}
 		catch (Exception e) {
-			throw new RuntimeException("problema na criação do arquivo  correntistas " + e.getMessage());
+			throw new RuntimeException("problema na cria��o do arquivo  correntistas " + e.getMessage());
 		}
 
 		//******** gravar contas *****
@@ -219,7 +215,7 @@ public class Repositorio {
 			}
 			arquivo2.close();
 		} catch (Exception e) {
-			throw new RuntimeException("problema na criação do arquivo  contas " + e.getMessage());
+			throw new RuntimeException("problema na cria��o do arquivo  contas " + e.getMessage());
 		}
 
 	}

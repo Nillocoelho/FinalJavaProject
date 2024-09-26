@@ -44,7 +44,7 @@ public class Fachada {
 
 		co = new Correntista(cpf, nome, senha);
 
-		repositorio.adicionar(co);
+		repositorio.adicionarCorrentista(co);
 		repositorio.salvarObjetos();
 	}
 
@@ -71,9 +71,9 @@ public class Fachada {
 		Conta c = new Conta(id, dataAtual, saldo);
 
 		// Adicionar a conta ao repositório
+        c.adicionarCorrentistaTitular(co);
 		co.adicionar(c);
-		c.adicionar(co);
-		repositorio.adicionar(c);
+		repositorio.adicionarConta(c);
 		repositorio.salvarObjetos();
 
 		System.out.println("Conta criada com sucesso para o correntista " + co.getNome() + ".");
@@ -110,9 +110,9 @@ public class Fachada {
 		ContaEspecial contaEspecial = new ContaEspecial(idConta, dataAtual, saldo, limite);
 
 		// Adiciona a conta Especial ao repositório
+        contaEspecial.adicionarCorrentistaTitular(co);
 		co.adicionar(contaEspecial);
-		contaEspecial.adicionar(co);
-		repositorio.adicionar(contaEspecial);
+		repositorio.adicionarConta(contaEspecial);
 		repositorio.salvarObjetos();
 
 		System.out.println("Conta especial criada com sucesso para o correntista " + co.getNome() + ".");
@@ -129,12 +129,12 @@ public class Fachada {
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 
-		if (c.contemCorrentista(co)) {
-			throw new Exception("Correntista com CPF " + cpf + " já está cadastrado nesta conta como cotitular.");
+		if (c.getCorrentistas().contains(co)) {
+			throw new Exception("Correntista com CPF " + cpf + " já está cadastrado na conta com ID " + id + " como cotitular.");
 	    }
 
 		// adicionar o correntista a conta
-		c.adicionar(co);
+		c.adicionarCorrentista(co);
 		// adicionar a conta ao correntista
 		co.adicionar(c);
 		
@@ -155,14 +155,18 @@ public class Fachada {
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
 		
-		if (c.getCorrentistas().getFirst().getCpf().equals(cpf)) 
+		if (co.getContas().getFirst().getId() == id)
 			throw new Exception("O correntista informado é o titular da conta e não pode ser removido.");
-		
-		 c.remover(co);
-		    
-		 co.remover(c);
 
-		 repositorio.salvarObjetos();
+		 // Verifica se o correntista já foi removido da conta
+		 if (!c.getCorrentistas().contains(co))
+		 throw new Exception("Correntista com CPF " + cpf + " já foi removido como co-titular da conta.");
+		
+		c.removerCorrentista(co);
+		    
+		co.removerConta(c);
+
+		repositorio.salvarObjetos();
 	       
 		System.out.println("Correntista " + co.getNome() + " removido como cotitular na conta ID " + id + ".");
 		
@@ -185,13 +189,11 @@ public class Fachada {
 		// Remover o relacionamento com cada correntista
 		for (Correntista co : c.getCorrentistas()) {
 			// Remover a conta da lista de contas do correntista
-			co.remover(c);
+            c.removerCorrentista(co);
+			co.removerConta(c);
 		}
 
-		// Remover os correntistas relacionados
-		c.getCorrentistas().clear();
-
-		repositorio.remover(c);
+		repositorio.removerConta(c);
 		repositorio.salvarObjetos();
 
 		System.out.println("Conta ID " + id + " apagada com sucesso.");
