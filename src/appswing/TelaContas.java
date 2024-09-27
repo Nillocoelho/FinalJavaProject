@@ -119,7 +119,7 @@ public class TelaContas {
 					else
 						Fachada.criarContaEspecial(cpf, limite);
 
-					label.setText("participante criado: ");
+					label.setText("Conta Criada: ");
 					listagem();
 				} catch (Exception ex) {
 					label.setText(ex.getMessage());
@@ -205,7 +205,7 @@ public class TelaContas {
 						JOptionPane.showMessageDialog(frame, "Saldo da conta" + c.getSaldo());
 
 						Object[] options = { "Confirmar", "Desistir" };
-						int escolha = JOptionPane.showOptionDialog(null, "Confirma inscricao do evento " + id, "Alerta",
+						int escolha = JOptionPane.showOptionDialog(null, "Confirma cadastro da conta? " + id, "Alerta",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 						if (escolha == 0) {
 							Fachada.inserirCorrentistaConta(Integer.parseInt(id), cpf);
@@ -254,7 +254,7 @@ public class TelaContas {
 						JOptionPane.showMessageDialog(frame, "Saldo da conta =" + c.getSaldo());
 
 						Object[] options = { "Confirmar", "Desistir" };
-						int escolha = JOptionPane.showOptionDialog(null, "Confirma remocao do evento " + id, "Alerta",
+						int escolha = JOptionPane.showOptionDialog(null, "Confirma remocao da conta " + id, "Alerta",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 						if (escolha == 0) {
 							Fachada.removerCorrentistaConta(Integer.parseInt(id), cpf);
@@ -286,11 +286,12 @@ public class TelaContas {
 			model.addColumn("id");
 			model.addColumn("data");
 			model.addColumn("saldo");
+			model.addColumn("limite");
 
 			// linhas
 			for (Conta c : listaContas) {
 				if(c instanceof ContaEspecial ce)
-					model.addRow(new Object[]{c.getId() + "", c.getData(), (-ce.getLimite())});
+					model.addRow(new Object[]{c.getId() + "", c.getData(), c.getSaldo(), ce.getLimite()});
 				else
 					model.addRow(new Object[]{c.getId() + "", c.getData(), c.getSaldo()});
 			}

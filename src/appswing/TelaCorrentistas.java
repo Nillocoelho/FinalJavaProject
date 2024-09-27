@@ -267,7 +267,7 @@ public class TelaCorrentistas {
 				}
 
 			table.setModel(model);
-			label_6.setText("resultados: "+lista.size()+ " participantes   - selecione uma linha");
+			label_6.setText("resultados: "+lista.size()+ " correntistas  - selecione uma linha");
 		}catch(
 
 	Exception erro)

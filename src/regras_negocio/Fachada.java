@@ -33,15 +33,22 @@ public class Fachada {
 		nome = nome.trim();
 
 		Correntista co = repositorio.localizarCorrentista(cpf);
-
+		
+		if (!nome.matches("^[a-zA-Z]+$")) {
+		    throw new Exception("O nome deve conter apenas letras.");
+		}
 		if (co != null && co.getCpf().equals(cpf)) {
 			throw new Exception("Erro, CPF já se encontra no cadastro de correntista titulares");
 		}
-
-		if (senha.matches("\\d{3}")) {
-			throw new Exception("A senha deve ter 4 números no mínimo");
+		if (!senha.matches("\\d{4}")) {
+			throw new Exception("A senha deve ter 4 números");
 		}
-
+		if (!senha.matches("\\d+")) {
+		    throw new Exception("A senha deve conter apenas números.");
+		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
 		co = new Correntista(cpf, nome, senha);
 
 		repositorio.adicionarCorrentista(co);
@@ -55,6 +62,9 @@ public class Fachada {
 
 		if (co == null) {
 			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta.");
+		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
 		}
 		
 		// Verifica se o correntista já tem uma conta normal
@@ -86,6 +96,9 @@ public class Fachada {
 
 		if (co == null) {
 			throw new Exception("Correntista com CPF " + cpf + " precisa está cadastrado no sistema para criar uma conta como titular.");
+		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
 		}
 		// Verifica se o correntista já tem uma conta
 	    if (co.temConta()) {
@@ -124,6 +137,10 @@ public class Fachada {
 		Correntista co = repositorio.localizarCorrentista(cpf);
 		if (co == null)
 			throw new Exception("Correntista com CPF " + cpf + " não encontrado. Correntista precisa está cadastrado!");
+		
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
 
 		Conta c = repositorio.localizarConta(id);
 		if (c == null)
@@ -154,6 +171,10 @@ public class Fachada {
 		Conta c = repositorio.localizarConta(id);
 		if (c == null)
 			throw new Exception("Conta com ID " + id + " não encontrada. Conta precisa existir!");
+		
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
 		
 		if (co.getContas().getFirst().getId() == id)
 			throw new Exception("O correntista informado é o titular da conta e não pode ser removido.");
@@ -226,6 +247,13 @@ public class Fachada {
 		if (valor <= 0) {
 			throw new Exception("O valor a ser creditado deve ser maior que zero.");
 		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
+		if (!senha.matches("\\d+")) {
+		    throw new Exception("A senha deve conter apenas números.");
+		}
+		
 		// Credita o valor na conta
 		c.creditar(valor);
 		// Salva as alterações no repositório
@@ -262,6 +290,12 @@ public class Fachada {
 		// Verifica se o valor é positivo
 		if (valor <= 0) {
 			throw new Exception("O valor a ser debitado deve ser maior que zero.");
+		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
+		if (!senha.matches("\\d+")) {
+		    throw new Exception("A senha deve conter apenas números.");
 		}
 
 		// Verifica se a conta é uma ContaEspecial e realiza a operação
@@ -321,6 +355,12 @@ public class Fachada {
 		// Verifica se o valor é positivo
 		if (valor <= 0) {
 			throw new Exception("O valor a ser transferido deve ser maior que zero.");
+		}
+		if (!cpf.matches("\\d+")) {
+		    throw new Exception("O cpf deve conter apenas números.");
+		}
+		if (!senha.matches("\\d+")) {
+		    throw new Exception("A senha deve conter apenas números.");
 		}
 
 		// Verifica se a conta é uma ContaEspecial e realiza a operação
